@@ -1,11 +1,13 @@
 package clammy;
 
 /**
- * Represents a task and whether it has been completed.
+ * Represents a general task and whether it has been completed.
  */
 public class Task {
-    protected String description;
-    protected boolean isDone;
+    private static int totalTask = 0;
+
+    private final String description;
+    private boolean isDone;
 
     /**
      * Creates an incomplete task with the given description.
@@ -15,6 +17,7 @@ public class Task {
     public Task(String description) {
         this.description = description;
         this.isDone = false;
+        totalTask++;
     }
 
     /**
@@ -38,6 +41,15 @@ public class Task {
      */
     public void markAsNotDone() {
         isDone = false;
+    }
+
+    /**
+     * Returns the number of tasks created during this program run.
+     *
+     * @return Number of tasks created.
+     */
+    public static int getTotalTask() {
+        return totalTask;
     }
 
     @Override
