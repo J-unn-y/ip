@@ -2,7 +2,7 @@
 /.idea/
 /out/
 /*.iml
-
+*.class
 # Gradle build files
 /.gradle/
 /build/
@@ -15,6 +15,9 @@ bin/
 
 # Temp files
 _temp/
+
+# Local Codex skills
+/.agents/skills/present-changes-visually/
 
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
