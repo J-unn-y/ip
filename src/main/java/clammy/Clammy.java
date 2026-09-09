@@ -31,7 +31,7 @@ public class Clammy {
                 if (shouldExit) {
                     return;
                 }
-            } catch (ParseException exception) {
+            } catch (ClammyException exception) {
                 ui.showError(exception.getMessage());
             }
         }
