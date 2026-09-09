@@ -1,4 +1,4 @@
-package clammy;
+package clammy.command;
 
 /** Identifies a command supported by Clammy. */
 public enum CommandType {

@@ -1,4 +1,4 @@
-package clammy;
+package clammy.task;
 
 /**
  * Represents a general task and whether it has been completed.

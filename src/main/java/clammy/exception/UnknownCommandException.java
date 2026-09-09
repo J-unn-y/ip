@@ -1,4 +1,4 @@
-package clammy;
+package clammy.exception;
 
 /** Indicates that a command keyword is not supported by Clammy. */
 public class UnknownCommandException extends ClammyException {

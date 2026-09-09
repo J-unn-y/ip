@@ -1,4 +1,4 @@
-package clammy;
+package clammy.task;
 
 /**
  * Represents a task that has a date range.

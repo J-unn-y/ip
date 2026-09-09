@@ -1,4 +1,4 @@
-package clammy;
+package clammy.ui;
 
 import java.util.Scanner;
 

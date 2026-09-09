@@ -1,4 +1,4 @@
-package clammy;
+package clammy.command;
 
 /**
  * Stores a recognized command type and the text following its keyword.

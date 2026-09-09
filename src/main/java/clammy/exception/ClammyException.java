@@ -1,4 +1,4 @@
-package clammy;
+package clammy.exception;
 
 /** Represents an error caused by a command that Clammy cannot complete. */
 public class ClammyException extends Exception {

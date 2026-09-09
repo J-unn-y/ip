@@ -1,6 +1,12 @@
-package clammy;
+package clammy.command;
 
 import java.util.Locale;
+
+import clammy.exception.ParseException;
+import clammy.task.Deadline;
+import clammy.task.Event;
+import clammy.task.Task;
+import clammy.task.Todo;
 
 /** Converts user input into structured commands and task values. */
 public final class Parser {

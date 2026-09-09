@@ -1,4 +1,4 @@
-package clammy;
+package clammy.exception;
 
 /** Indicates that a user-supplied task number does not identify a stored task. */
 public class TaskNotFoundException extends ClammyException {

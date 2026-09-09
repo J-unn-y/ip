@@ -1,8 +1,10 @@
-package clammy;
+package clammy.task;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import clammy.exception.TaskNotFoundException;
 
 /** Stores tasks and translates user-facing task numbers into list indexes. */
 public class TaskList {

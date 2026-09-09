@@ -1,4 +1,11 @@
-package clammy;
+package clammy.command;
+
+import clammy.exception.ClammyException;
+import clammy.exception.ParseException;
+import clammy.exception.UnknownCommandException;
+import clammy.task.Task;
+import clammy.task.TaskList;
+import clammy.ui.Ui;
 
 /** Executes parsed commands against a task list without performing console I/O. */
 public class CommandHandler {

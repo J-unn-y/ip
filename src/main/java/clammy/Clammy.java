@@ -1,5 +1,10 @@
 package clammy;
 
+import clammy.command.CommandHandler;
+import clammy.exception.ClammyException;
+import clammy.task.TaskList;
+import clammy.ui.Ui;
+
 /**
  * Coordinates Clammy's user interface and command handling.
  */

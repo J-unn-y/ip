@@ -1,4 +1,4 @@
-package clammy;
+package clammy.exception;
 
 /** Indicates that a user command does not follow Clammy's command grammar. */
 public class ParseException extends ClammyException {
