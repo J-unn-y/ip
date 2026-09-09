@@ -127,17 +127,22 @@ ____________________________________________________________
 
 ```
 
-### TC-03: Malformed commands remain recoverable
+### TC-03: All malformed commands remain recoverable
 
-**Aim:** Verifies that missing task fields, nonnumeric task numbers, and nonexistent task numbers produce helpful
-messages without terminating Clammy.
+**Aim:** Verifies that missing task fields, invalid and nonexistent task numbers, and unexpected command arguments
+produce specific correction messages without terminating Clammy.
 
 **Input:**
 
 ```text
+todo
 deadline submit report
+event project meeting /from Monday
 mark cat
+mark 0
 mark 1
+list extra
+bye extra
 bye
 ```
 
@@ -150,7 +155,15 @@ What can I do for you?
 ____________________________________________________________
 
 ____________________________________________________________
+A todo must have a description.
+____________________________________________________________
+
+____________________________________________________________
 A deadline must follow: deadline DESCRIPTION /by DATE_OR_TIME
+____________________________________________________________
+
+____________________________________________________________
+An event must follow: event DESCRIPTION /from START /to END
 ____________________________________________________________
 
 ____________________________________________________________
@@ -158,7 +171,19 @@ Please provide a valid task number.
 ____________________________________________________________
 
 ____________________________________________________________
+Please provide a positive task number.
+____________________________________________________________
+
+____________________________________________________________
 That task number does not exist.
+____________________________________________________________
+
+____________________________________________________________
+The list command does not take arguments.
+____________________________________________________________
+
+____________________________________________________________
+The bye command does not take arguments.
 ____________________________________________________________
 
 ____________________________________________________________
