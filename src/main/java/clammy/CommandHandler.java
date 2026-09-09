@@ -23,9 +23,9 @@ public class CommandHandler {
      * @param input Raw user command.
      * @param ui User interface used to display the result.
      * @return {@code true} when Clammy should stop after this command.
-     * @throws ParseException If the command's arguments are malformed.
+     * @throws ClammyException If the command cannot be completed.
      */
-    public boolean execute(String input, Ui ui) throws ParseException {
+    public boolean execute(String input, Ui ui) throws ClammyException {
         ParsedCommand command = Parser.parse(input);
         String message = switch (command.type()) {
         case BYE -> exit(command.arguments());
@@ -33,7 +33,7 @@ public class CommandHandler {
         case MARK -> updateTaskStatus(command.arguments(), true);
         case UNMARK -> updateTaskStatus(command.arguments(), false);
         case TODO, DEADLINE, EVENT -> addTask(command);
-        case UNKNOWN -> VALID_COMMANDS;
+        case UNKNOWN -> throw new UnknownCommandException(VALID_COMMANDS);
         };
         ui.showMessage(message);
         return command.type() == CommandType.BYE;
@@ -63,11 +63,8 @@ public class CommandHandler {
     }
 
     private String updateTaskStatus(String arguments, boolean shouldMarkDone)
-            throws ParseException {
+            throws ClammyException {
         int taskNumber = Parser.parseTaskNumber(arguments);
-        if (!taskList.hasTaskNumber(taskNumber)) {
-            return "That task number does not exist.";
-        }
         Task task = taskList.getTask(taskNumber);
         if (shouldMarkDone) {
             task.markAsDone();

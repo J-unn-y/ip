@@ -18,10 +18,11 @@ public class TaskList {
      *
      * @param taskNumber Task number shown to the user.
      * @return Task with the supplied number.
+     * @throws TaskNotFoundException If the number does not identify a stored task.
      */
-    public Task getTask(int taskNumber) {
+    public Task getTask(int taskNumber) throws TaskNotFoundException {
         if (!hasTaskNumber(taskNumber)) {
-            throw new IllegalArgumentException("That task number does not exist.");
+            throw new TaskNotFoundException();
         }
         return tasks.get(taskNumber - 1);
     }
