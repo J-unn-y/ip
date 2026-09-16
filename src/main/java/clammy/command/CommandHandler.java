@@ -16,6 +16,7 @@ public class CommandHandler {
             + "list\n"
             + "mark TASK_NUMBER\n"
             + "unmark TASK_NUMBER\n"
+            + "delete TASK_NUMBER\n"
             + "bye";
     private final TaskList taskList;
 
@@ -39,6 +40,7 @@ public class CommandHandler {
         case LIST -> listTasks(command.arguments());
         case MARK -> updateTaskStatus(command.arguments(), true);
         case UNMARK -> updateTaskStatus(command.arguments(), false);
+        case DELETE -> deleteTask(command.arguments());
         case TODO, DEADLINE, EVENT -> addTask(command);
         case UNKNOWN -> throw new UnknownCommandException(VALID_COMMANDS);
         };
@@ -67,6 +69,15 @@ public class CommandHandler {
         String message = "Got it. I've added this task:\n" + task
                 + "\nNow you have " + taskList.size() + " " + taskLabel + " in the list.";
         return message;
+    }
+
+    /** Removes the numbered task and reports the remaining task count. */
+    private String deleteTask(String arguments) throws ClammyException {
+        int taskNumber = Parser.parseTaskNumber(arguments);
+        Task task = taskList.removeTask(taskNumber);
+        String taskLabel = taskList.size() == 1 ? "task" : "tasks";
+        return "Noted. I've removed this task:\n" + task
+                + "\nNow you have " + taskList.size() + " " + taskLabel + " in the list.";
     }
 
     private String updateTaskStatus(String arguments, boolean shouldMarkDone)

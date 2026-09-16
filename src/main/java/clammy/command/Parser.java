@@ -51,7 +51,7 @@ public final class Parser {
     }
 
     /**
-     * Returns the task number in a mark or unmark command.
+     * Returns the task number in a mark, unmark, or delete command.
      *
      * @param arguments Text following the command keyword.
      * @return Positive task number supplied by the user.
