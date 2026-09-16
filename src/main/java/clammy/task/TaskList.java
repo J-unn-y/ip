@@ -29,6 +29,20 @@ public class TaskList {
         return tasks.get(taskNumber - 1);
     }
 
+    /**
+     * Removes and returns a task, shifting later tasks down by one position.
+     *
+     * @param taskNumber One-based task number shown to the user.
+     * @return Task removed from the list.
+     * @throws TaskNotFoundException If the number does not identify a stored task.
+     */
+    public Task removeTask(int taskNumber) throws TaskNotFoundException {
+        if (!hasTaskNumber(taskNumber)) {
+            throw new TaskNotFoundException();
+        }
+        return tasks.remove(taskNumber - 1);
+    }
+
     /** Returns whether a one-based number identifies a stored task. */
     public boolean hasTaskNumber(int taskNumber) {
         return taskNumber >= 1 && taskNumber <= tasks.size();

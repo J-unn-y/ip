@@ -2,7 +2,7 @@ package clammy.command;
 
 /** Identifies a command supported by Clammy. */
 public enum CommandType {
-    TODO, DEADLINE, EVENT, LIST, MARK, UNMARK, BYE, UNKNOWN;
+    TODO, DEADLINE, EVENT, LIST, MARK, UNMARK, DELETE, BYE, UNKNOWN;
 
     /**
      * Returns the command type represented by a keyword.
