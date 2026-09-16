@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Runs the UI plan in isolated folders and stops at the first failure."""
 
+import argparse
 import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -58,9 +60,10 @@ def restore_permissions(directory, setup):
         path.chmod(0o700 if path.is_dir() else 0o600)
 
 
-def execute_session(directory, inputs, checkpoints):
+def execute_session(directory, inputs, checkpoints, jar_path):
     """Optionally checks disk contents after commands while the process stays open."""
-    command = [JAVA, "-cp", str(ROOT / "out"), "clammy.Clammy"]
+    command = ([JAVA, "-jar", jar_path.name] if jar_path
+               else [JAVA, "-cp", str(ROOT / "out"), "clammy.Clammy"])
     if not checkpoints:
         return subprocess.run(command, input=inputs, text=True, encoding="utf-8",
                               capture_output=True, cwd=directory, timeout=15)
@@ -91,8 +94,12 @@ def execute_session(directory, inputs, checkpoints):
         process.wait()
 
 
-def run_case(directory, section, report):
+def run_case(directory, section, report, jar_path):
     """Checks console output and saved data for every recorded process session."""
+    if jar_path:
+        copied_jar = directory / "Clammy [release].jar"
+        shutil.copyfile(jar_path, copied_jar)
+        jar_path = copied_jar
     setup_match = re.search(r"\*\*Setup:\*\*\s+```json\n(.*?)```", section, re.S)
     setup = json.loads(setup_match[1]) if setup_match else {}
     if setup.get("modes") and (os.name != "posix" or os.geteuid() == 0):
@@ -107,7 +114,7 @@ def run_case(directory, section, report):
             inputs, expected = blocks[:2]
             checkpoint_match = re.search(r"\*\*Save checkpoints:\*\*\s+```json\n(.*?)```", session, re.S)
             checkpoints = json.loads(checkpoint_match[1]) if checkpoint_match else []
-            completed = execute_session(directory, inputs, checkpoints)
+            completed = execute_session(directory, inputs, checkpoints, jar_path)
             report.extend([
                 f"### Session {number}\n",
                 f"**Input:**\n\n```text\n{inputs}```\n",
@@ -142,6 +149,12 @@ def run_case(directory, section, report):
 
 def main():
     """Checks the runtime, runs cases in order, and writes full console transcripts."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--jar", type=Path, help="Run the UI cases against this executable JAR.")
+    args = parser.parse_args()
+    jar_path = args.jar.resolve() if args.jar else None
+    if jar_path and not jar_path.is_file():
+        parser.error(f"JAR does not exist: {jar_path}. Build it with ./gradlew shadowJar first.")
     version = subprocess.run([JAVA, "-version"], capture_output=True, text=True, check=True)
     if not re.search(r'version "25[.\"]', version.stderr + version.stdout):
         sys.exit("Select Java 25 before running these tests.")
@@ -151,12 +164,13 @@ def main():
     if not cases or len(set(names)) != len(names):
         sys.exit("The plan must contain uniquely numbered cases.")
     REPORT.parent.mkdir(exist_ok=True)
-    report = ["# UI test transcript\n", f"Runtime: {version.stderr.splitlines()[0]}\n"]
+    report = ["# UI test transcript\n", f"Runtime: {version.stderr.splitlines()[0]}\n",
+              f"Application: {jar_path or 'out/ compiled classes'}\n"]
     for index, (name, section) in enumerate(cases):
         report.append(f"## {name}\n")
         try:
             with tempfile.TemporaryDirectory(prefix="clammy-ui-") as folder:
-                run_case(Path(folder), section, report)
+                run_case(Path(folder), section, report, jar_path)
         except (AssertionError, OSError, subprocess.SubprocessError, ValueError) as error:
             report.append(f"**FAIL:** {error}\n")
             remaining = [name for name, _ in cases[index + 1:]]

@@ -1,12 +1,16 @@
 # Clammy
 
-Clammy is a command-line task manager written in Java. It keeps track of todo items, deadlines, and events during
-the current program session. Tasks can also be listed, marked as completed, and marked as incomplete.
+Clammy is a command-line task manager written in Java. It keeps track of todo items, deadlines, and events.
+Tasks can be listed, marked as completed or incomplete, and deleted. Changes are saved automatically and
+loaded the next time Clammy starts.
 
 ## Requirements
 
 - JDK 25
 - A terminal or IntelliJ IDEA
+
+The included Gradle wrapper downloads Gradle 9.2.1 when first used, so you do not need to install Gradle
+separately. The first build requires internet access to download Gradle and the Shadow plugin.
 
 On macOS with SDKMAN, select the project Java version when necessary:
 
@@ -22,17 +26,67 @@ javac -version
 
 The result should report Java 25.
 
-## Compile and run from a terminal
+## Run a downloaded release
+
+1. Install Java 25 and check it with `java -version`.
+2. Download `clammy-all.jar` from this fork's [GitHub releases](https://github.com/J-unn-y/ip/releases).
+3. Copy the JAR into an empty folder and open a terminal in that folder.
+4. Run:
+
+   ```bash
+   java -jar "clammy-all.jar"
+   ```
+
+Clammy creates `data/clammy.txt` beside the JAR when you first change a task. Run it from the same folder
+next time to load your saved tasks. Source files and Gradle are not needed to run the downloaded JAR.
+If you rename the JAR, use the new filename in the command and keep the double quotes for names with
+spaces or brackets. Running from a terminal is the supported workflow; double-clicking is not required.
+
+## Build and run a fat JAR
 
 Run these commands from the project root:
 
 ```bash
-javac -d out src/main/java/clammy/*.java
-java -cp out clammy.Clammy
+./gradlew shadowJar
+java -jar "build/libs/clammy-all.jar"
 ```
 
-The `-d out` option places generated `.class` files in the ignored `out` directory instead of mixing them with
-the source files.
+`shadowJar` compiles the source files and packages the application and its runtime dependencies into
+**`build/libs/clammy-all.jar`**. This is the fat JAR to distribute. The filename is configured explicitly in
+`build.gradle`, so it stays the same when the project folder is renamed. Generated files under `build/` are
+ignored by Git.
+
+Do not commit this generated application JAR. Attach it as a binary asset to a GitHub release instead.
+The small `gradle/wrapper/gradle-wrapper.jar` belongs in Git: it is the build launcher, not the generated
+Clammy application. Release notes for the first release are in [docs/release-notes-v0.1.md](docs/release-notes-v0.1.md).
+
+The build uses the [Shadow plugin](https://gradleup.com/shadow/) (`com.gradleup.shadow`, version 9.6.1)
+with Gradle's `application` plugin. Setting `mainClass` to `clammy.Clammy` adds the entry point to the JAR
+manifest, allowing `java -jar` to start Clammy. The Java toolchain is set to Java 25.
+
+Clammy currently has no third-party runtime dependencies, so the JAR is small. Shadow will also bundle
+runtime dependencies added to the build later. A fat JAR does not include Java itself: the machine running
+it needs Java 25. You can share the JAR without sharing the source code or installing Gradle on that machine.
+
+Run the JAR from the project root to continue using the project's `data/clammy.txt`. If you copy the JAR
+elsewhere, saved data is relative to the terminal's working directory, not the JAR's location. Clammy creates
+the data folder on its first save. See [saved tasks](docs/storage.md) for format and error handling.
+
+Run `./gradlew shadowJar` again after changing the source code. To remove previous build outputs first, use:
+
+```bash
+./gradlew clean shadowJar
+```
+
+If the shell reports `permission denied` when launching the wrapper, run `chmod +x gradlew` once.
+
+## Run from source with Gradle
+
+```bash
+./gradlew --console=plain run
+```
+
+Gradle compiles all Java packages automatically and forwards terminal input to Clammy.
 
 ## Commands
 

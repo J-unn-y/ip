@@ -18,6 +18,25 @@ and directories after all sessions. Optional **Save checkpoints** check the file
 after specified commands while the process is still open, before sending the next
 command. Every session includes complete console output.
 
+## Fat JAR verification
+
+After compiling all Java sources into `out/` and running the regular UI tests,
+build the executable JAR with `./gradlew shadowJar`. Run the same cases against
+the packaged application with:
+
+```bash
+python3 test/run-ui-tests.py --jar build/libs/clammy-all.jar
+```
+
+This mode copies only the JAR into each otherwise empty test directory, naming it
+`Clammy [release].jar` to cover filenames with spaces and brackets. It then prepares
+any recorded data fixtures and launches the app from that directory using the
+equivalent of `java -jar "Clammy [release].jar"`. Each restart reuses the copied JAR.
+This checks the entry point, packaged classes, console behavior, and saving/loading
+without access to project files through the working directory. All inputs, expected
+output, and saved-data checks below remain the same. Both modes require Java 25 and
+stop at the first failure.
+
 ## Test case format
 
 ### TC-NN: Descriptive name
