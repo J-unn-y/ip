@@ -1,8 +1,11 @@
 package clammy.command;
 
+import java.io.IOException;
+
 import clammy.exception.ClammyException;
 import clammy.exception.ParseException;
 import clammy.exception.UnknownCommandException;
+import clammy.storage.Storage;
 import clammy.task.Task;
 import clammy.task.TaskList;
 import clammy.ui.Ui;
@@ -18,10 +21,12 @@ public class CommandHandler {
             + "unmark TASK_NUMBER\n"
             + "bye";
     private final TaskList taskList;
+    private final Storage storage;
 
-    /** Creates a command handler for the supplied task list. */
-    public CommandHandler(TaskList taskList) {
+    /** Creates a command handler for the supplied task list and its storage. */
+    public CommandHandler(TaskList taskList, Storage storage) {
         this.taskList = taskList;
+        this.storage = storage;
     }
 
     /**
@@ -43,6 +48,18 @@ public class CommandHandler {
         case UNKNOWN -> throw new UnknownCommandException(VALID_COMMANDS);
         };
         ui.showMessage(message);
+        boolean shouldSave = switch (command.type()) {
+        case TODO, DEADLINE, EVENT, MARK, UNMARK -> true;
+        default -> false;
+        };
+        if (shouldSave) {
+            try {
+                storage.save(taskList);
+            } catch (IOException exception) {
+                ui.showError("Could not save data/clammy.txt. Changes are in memory only."
+                        + "\nCheck that the data folder is writable before changing another task.");
+            }
+        }
         return command.type() == CommandType.BYE;
     }
 
