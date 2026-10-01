@@ -59,7 +59,21 @@ public class Ui {
      * Displays all tasks with their one-based task numbers.
      */
     public void showTaskList(TaskList tasks) {
-        StringBuilder message = new StringBuilder("Here are the tasks in your list:");
+        showTaskList(tasks, "Here are the tasks in your list:");
+    }
+
+    /**
+     * Displays matching tasks numbered from one, or just the heading when there are no matches.
+     */
+    public void showMatchingTasks(TaskList tasks) {
+        showTaskList(tasks, "Here are the matching tasks in your list:");
+    }
+
+    /**
+     * Displays a numbered task list under the supplied heading.
+     */
+    private void showTaskList(TaskList tasks, String heading) {
+        StringBuilder message = new StringBuilder(heading);
         int taskNumber = 1;
         for (Task task : tasks.asList()) {
             message.append("\n").append(taskNumber).append(".").append(task);
@@ -112,6 +126,9 @@ public class Ui {
                 + "\nCheck that the data folder is writable before changing another task.");
     }
 
+    /**
+     * Formats the list size using the appropriate singular or plural task label.
+     */
     private String formatTaskCount(int taskCount) {
         String taskLabel = taskCount == 1 ? "task" : "tasks";
         return "Now you have " + taskCount + " " + taskLabel + " in the list.";

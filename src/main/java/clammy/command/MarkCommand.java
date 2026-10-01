@@ -19,6 +19,9 @@ public class MarkCommand extends Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Marks the numbered task as done, displays confirmation, and saves the change.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws TaskNotFoundException {
         Task task = tasks.getTask(taskNumber);

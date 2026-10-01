@@ -72,6 +72,9 @@ public class Deadline extends Task {
                 .withResolverStyle(ResolverStyle.STRICT);
     }
 
+    /**
+     * Returns the deadline type, completion status, description, and formatted date.
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: "

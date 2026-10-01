@@ -19,6 +19,9 @@ public class DeleteCommand extends Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Removes the numbered task, displays confirmation, and saves the updated list.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws TaskNotFoundException {
         Task task = tasks.removeTask(taskNumber);

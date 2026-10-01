@@ -140,6 +140,21 @@ event project meeting /from Monday 2pm /to 4pm
 list
 ```
 
+### Find tasks by description
+
+```text
+find book
+```
+
+Displays tasks whose descriptions contain `book`, ignoring case (including `Book` and `notebook`).
+You can also search for a phrase, such as `find return book`; spaces within the phrase are matched literally.
+The keyword must not be blank. Dates, event times, and completion markers are not searched.
+Matches retain their original order and completion status. An empty result displays only
+`Here are the matching tasks in your list:`. Searching does not change or save tasks.
+
+Search results are numbered from 1 for display. Use `list` to get the full-list task numbers
+before using `mark`, `unmark`, or `delete`.
+
 ### Mark a task as completed
 
 Task numbers are shown by the `list` command.

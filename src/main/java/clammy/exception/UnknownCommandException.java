@@ -1,6 +1,8 @@
 package clammy.exception;
 
-/** Indicates that a command keyword is not supported by Clammy. */
+/**
+ * Indicates that a command keyword is not supported by Clammy.
+ */
 public class UnknownCommandException extends ClammyException {
     /**
      * Creates an error that lists the commands accepted by Clammy.

@@ -19,6 +19,9 @@ public class UnmarkCommand extends Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Marks the numbered task as incomplete, displays confirmation, and saves the change.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws TaskNotFoundException {
         Task task = tasks.getTask(taskNumber);

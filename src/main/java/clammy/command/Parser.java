@@ -18,6 +18,7 @@ public final class Parser {
             + "deadline DESCRIPTION /by DATE_OR_TIME\n"
             + "event DESCRIPTION /from START /to END\n"
             + "list\n"
+            + "find KEYWORD\n"
             + "mark TASK_NUMBER\n"
             + "unmark TASK_NUMBER\n"
             + "delete TASK_NUMBER\n"
@@ -53,6 +54,12 @@ public final class Parser {
         case "mark" -> new MarkCommand(parseTaskNumber(arguments));
         case "unmark" -> new UnmarkCommand(parseTaskNumber(arguments));
         case "delete" -> new DeleteCommand(parseTaskNumber(arguments));
+        case "find" -> {
+            if (arguments.isBlank()) {
+                throw new ParseException("A find command must have a keyword. Use: find KEYWORD");
+            }
+            yield new FindCommand(arguments);
+        }
         case "todo" -> new AddCommand(parseTodo(arguments));
         case "deadline" -> new AddCommand(parseDeadline(arguments));
         case "event" -> new AddCommand(parseEvent(arguments));
@@ -60,6 +67,9 @@ public final class Parser {
         };
     }
 
+    /**
+     * Rejects extra arguments for commands that do not accept them.
+     */
     private static void requireNoArguments(String arguments, String commandWord) throws ParseException {
         if (!arguments.isEmpty()) {
             throw new ParseException("The " + commandWord + " command does not take arguments.");
@@ -85,6 +95,9 @@ public final class Parser {
         }
     }
 
+    /**
+     * Creates a todo after checking that its description is present.
+     */
     private static Todo parseTodo(String description) throws ParseException {
         if (description.isBlank()) {
             throw new ParseException("A todo must have a description.");
@@ -92,6 +105,9 @@ public final class Parser {
         return new Todo(description);
     }
 
+    /**
+     * Extracts the description and deadline, reporting invalid dates as command errors.
+     */
     private static Deadline parseDeadline(String arguments) throws ParseException {
         int byIndex = arguments.indexOf(DEADLINE_SEPARATOR);
         if (byIndex <= 0 || byIndex + DEADLINE_SEPARATOR.length() >= arguments.length()) {
@@ -106,6 +122,9 @@ public final class Parser {
         }
     }
 
+    /**
+     * Extracts an event's description, start, and end after checking the required separators.
+     */
     private static Event parseEvent(String arguments) throws ParseException {
         int fromIndex = arguments.indexOf(EVENT_FROM_SEPARATOR);
         int toIndex = arguments.indexOf(EVENT_TO_SEPARATOR,

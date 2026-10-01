@@ -6,7 +6,7 @@ The path is relative to the working directory and built using Java's `Path` API
 so it works across operating systems. Personal saved tasks are ignored by Git.
 
 The folder and file are created on the first save. A missing or empty file starts
-an empty list. Listing tasks, invalid commands, and exiting do not write the file.
+an empty list. Listing tasks, searching with `find`, invalid commands, and exiting do not write the file.
 
 ## File format
 

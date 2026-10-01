@@ -13,7 +13,9 @@ import java.util.List;
 import clammy.task.Task;
 import clammy.task.TaskList;
 
-/** Loads and saves tasks in a UTF-8 file relative to the working directory. */
+/**
+ * Loads and saves tasks in a UTF-8 file relative to the working directory.
+ */
 public class Storage {
     private static final Path DATA_DIRECTORY = Path.of("data");
     private static final Path DATA_FILE = DATA_DIRECTORY.resolve("clammy.txt");

@@ -276,6 +276,7 @@ todo DESCRIPTION
 deadline DESCRIPTION /by DATE_OR_TIME
 event DESCRIPTION /from START /to END
 list
+find KEYWORD
 mark TASK_NUMBER
 unmark TASK_NUMBER
 delete TASK_NUMBER
@@ -2196,6 +2197,7 @@ todo DESCRIPTION
 deadline DESCRIPTION /by DATE_OR_TIME
 event DESCRIPTION /from START /to END
 list
+find KEYWORD
 mark TASK_NUMBER
 unmark TASK_NUMBER
 delete TASK_NUMBER
@@ -2707,4 +2709,343 @@ ____________________________________________________________
 
 ```text
 D	1	return book	2019-12-02 1800
+```
+
+### TC-43: Find the requested book example
+
+**Aim:** Verifies the requested completed todo and deadline example using the supported date format.
+
+**Setup:**
+
+```json
+{
+  "files": {
+    "data/clammy.txt": "T\t1\tread book\nD\t1\treturn book\t2019-06-06\n"
+  }
+}
+```
+
+**Input:**
+
+```text
+find book
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][X] read book
+2.[D][X] return book (by: Jun 06 2019)
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+T	1	read book
+D	1	return book	2019-06-06
+```
+
+**Data unchanged:** yes
+
+### TC-44: Find only descriptions with literal case-insensitive text
+
+**Aim:** Verifies all task types, mixed case, partial words, phrases, duplicates, Unicode, literal punctuation,
+no matches, and result numbering. Dates, event times, and status markers are excluded. Searching
+and listing preserve task order and the original saved bytes, including a noncanonical saved date.
+
+**Setup:**
+
+```json
+{
+  "files": {
+    "data/clammy.txt": "\nT\t0\tchores\nT\t1\tread Book\nD\t0\treturn book\t2/12/2019 1800\nE\t0\tBOOK club\tMonday\tTuesday\nT\t0\tnotebook\nT\t0\tread Book\nT\t0\tcaf\u00e9 \u8ba1\u5212 .*\n\n"
+  }
+}
+```
+
+**Input:**
+
+```text
+  FiNd   bOoK  
+find return book
+find CAFÉ
+find 计划
+find .*
+find Monday
+find Dec
+find [X]
+find missing
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][X] read Book
+2.[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+3.[E][ ] BOOK club (from: Monday to: Tuesday)
+4.[T][ ] notebook
+5.[T][ ] read Book
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] café 计划 .*
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] café 计划 .*
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] café 计划 .*
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] chores
+2.[T][X] read Book
+3.[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+4.[E][ ] BOOK club (from: Monday to: Tuesday)
+5.[T][ ] notebook
+6.[T][ ] read Book
+7.[T][ ] café 计划 .*
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+
+T	0	chores
+T	1	read Book
+D	0	return book	2/12/2019 1800
+E	0	BOOK club	Monday	Tuesday
+T	0	notebook
+T	0	read Book
+T	0	café 计划 .*
+
+```
+
+**Data unchanged:** yes
+
+### TC-45: Find empty lists and recover from missing keywords
+
+**Aim:** Verifies searches on an empty list and blank search arguments do not create a save file or stop later commands.
+
+**Input:**
+
+```text
+find book
+find
+find   
+find	
+find book
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+
+____________________________________________________________
+A find command must have a keyword. Use: find KEYWORD
+____________________________________________________________
+
+____________________________________________________________
+A find command must have a keyword. Use: find KEYWORD
+____________________________________________________________
+
+____________________________________________________________
+A find command must have a keyword. Use: find KEYWORD
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:** absent
+
+### TC-46: Find reflects changes and preserves full-list task numbers
+
+**Aim:** Verifies searches after marking and deleting use the latest task state, keep the full-list task numbers
+for mutations, preserve nonmatching tasks, and continue working after restart.
+
+**Setup:**
+
+```json
+{
+  "files": {
+    "data/clammy.txt": "T\t0\tchores\nT\t0\tread book\nD\t0\treturn book\t2019-12-02\n"
+  }
+}
+```
+
+**Input:**
+
+```text
+find book
+mark 2
+find book
+delete 2
+find book
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read book
+2.[D][ ] return book (by: Dec 02 2019)
+____________________________________________________________
+
+____________________________________________________________
+Nice! I've marked this task as done:
+[T][X] read book
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][X] read book
+2.[D][ ] return book (by: Dec 02 2019)
+____________________________________________________________
+
+____________________________________________________________
+Noted. I've removed this task:
+[T][X] read book
+Now you have 2 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019)
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] chores
+2.[D][ ] return book (by: Dec 02 2019)
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+T	0	chores
+D	0	return book	2019-12-02
+```
+
+**Input:**
+
+```text
+find book
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019)
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+T	0	chores
+D	0	return book	2019-12-02
 ```

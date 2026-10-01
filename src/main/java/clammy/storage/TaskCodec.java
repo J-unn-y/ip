@@ -8,12 +8,16 @@ import clammy.task.Event;
 import clammy.task.Task;
 import clammy.task.Todo;
 
-/** Converts tasks to tab-separated records with escaped text fields. */
+/**
+ * Converts tasks to tab-separated records with escaped text fields.
+ */
 public final class TaskCodec {
     private TaskCodec() {
     }
 
-    /** Returns a single-line record preserving the task's type, status, and text. */
+    /**
+     * Returns a single-line record preserving the task's type, status, and text.
+     */
     public static String encode(Task task) {
         List<String> fields = new ArrayList<>();
         if (task instanceof Deadline deadline) {
@@ -75,11 +79,16 @@ public final class TaskCodec {
         return task;
     }
 
+    /**
+     * Escapes backslashes and tabs so each task stays on one tab-separated line.
+     */
     private static String escape(String text) {
         return text.replace("\\", "\\\\").replace("\t", "\\t");
     }
 
-    /** Rejects unrecognized escapes instead of silently changing saved task text. */
+    /**
+     * Rejects unrecognized escapes instead of silently changing saved task text.
+     */
     private static String unescape(String text) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {

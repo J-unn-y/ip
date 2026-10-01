@@ -26,10 +26,16 @@ public class Task {
         return isDone ? "X" : " ";
     }
 
+    /**
+     * Returns the task description without status or date formatting.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Returns whether the task has been completed.
+     */
     public boolean isDone() {
         return isDone;
     }
@@ -48,6 +54,9 @@ public class Task {
         isDone = false;
     }
 
+    /**
+     * Returns the completion marker and task description.
+     */
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;
