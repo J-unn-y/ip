@@ -2,14 +2,26 @@ package clammy.command;
 
 import java.util.Locale;
 
+import clammy.exception.ClammyException;
 import clammy.exception.ParseException;
+import clammy.exception.UnknownCommandException;
 import clammy.task.Deadline;
 import clammy.task.Event;
-import clammy.task.Task;
 import clammy.task.Todo;
 
-/** Converts user input into structured commands and task values. */
+/**
+ * Converts user input into structured commands and task values.
+ */
 public final class Parser {
+    private static final String VALID_COMMANDS = "I don't recognize that command. Valid commands are:\n"
+            + "todo DESCRIPTION\n"
+            + "deadline DESCRIPTION /by DATE_OR_TIME\n"
+            + "event DESCRIPTION /from START /to END\n"
+            + "list\n"
+            + "mark TASK_NUMBER\n"
+            + "unmark TASK_NUMBER\n"
+            + "delete TASK_NUMBER\n"
+            + "bye";
     private static final String DEADLINE_SEPARATOR = " /by ";
     private static final String EVENT_FROM_SEPARATOR = " /from ";
     private static final String EVENT_TO_SEPARATOR = " /to ";
@@ -18,36 +30,40 @@ public final class Parser {
     }
 
     /**
-     * Separates a command keyword from its arguments.
+     * Validates user input and creates the command that will execute it.
      *
      * @param input Raw user input.
-     * @return Structured command containing its type and arguments.
+     * @return Executable command containing parsed task values or task numbers.
+     * @throws ClammyException If the keyword is unknown or its arguments are malformed.
      */
-    public static ParsedCommand parse(String input) {
+    public static Command parse(String input) throws ClammyException {
         String normalizedInput = input.trim();
-        if (normalizedInput.isEmpty()) {
-            return new ParsedCommand(CommandType.UNKNOWN, "");
-        }
         String[] parts = normalizedInput.split("\\s+", 2);
-        CommandType commandType = CommandType.fromKeyword(parts[0].toLowerCase(Locale.ROOT));
+        String keyword = parts[0].toLowerCase(Locale.ROOT);
         String arguments = parts.length == 2 ? parts[1].trim() : "";
-        return new ParsedCommand(commandType, arguments);
+        return switch (keyword) {
+        case "bye" -> {
+            requireNoArguments(arguments, "bye");
+            yield new ExitCommand();
+        }
+        case "list" -> {
+            requireNoArguments(arguments, "list");
+            yield new ListCommand();
+        }
+        case "mark" -> new MarkCommand(parseTaskNumber(arguments));
+        case "unmark" -> new UnmarkCommand(parseTaskNumber(arguments));
+        case "delete" -> new DeleteCommand(parseTaskNumber(arguments));
+        case "todo" -> new AddCommand(parseTodo(arguments));
+        case "deadline" -> new AddCommand(parseDeadline(arguments));
+        case "event" -> new AddCommand(parseEvent(arguments));
+        default -> throw new UnknownCommandException(VALID_COMMANDS);
+        };
     }
 
-    /**
-     * Creates a task from a parsed add command.
-     *
-     * @param command Parsed todo, deadline, or event command.
-     * @return Task represented by the command.
-     * @throws ParseException If a required task field or delimiter is missing.
-     */
-    public static Task parseTask(ParsedCommand command) throws ParseException {
-        return switch (command.type()) {
-        case TODO -> parseTodo(command.arguments());
-        case DEADLINE -> parseDeadline(command.arguments());
-        case EVENT -> parseEvent(command.arguments());
-        default -> throw new ParseException("That command does not create a task.");
-        };
+    private static void requireNoArguments(String arguments, String commandWord) throws ParseException {
+        if (!arguments.isEmpty()) {
+            throw new ParseException("The " + commandWord + " command does not take arguments.");
+        }
     }
 
     /**
@@ -57,7 +73,7 @@ public final class Parser {
      * @return Positive task number supplied by the user.
      * @throws ParseException If the argument is not a positive integer.
      */
-    public static int parseTaskNumber(String arguments) throws ParseException {
+    private static int parseTaskNumber(String arguments) throws ParseException {
         try {
             int taskNumber = Integer.parseInt(arguments);
             if (taskNumber < 1) {

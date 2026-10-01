@@ -2,7 +2,8 @@ package clammy;
 
 import java.io.IOException;
 
-import clammy.command.CommandHandler;
+import clammy.command.Command;
+import clammy.command.Parser;
 import clammy.exception.ClammyException;
 import clammy.storage.Storage;
 import clammy.task.TaskList;
@@ -15,7 +16,9 @@ public class Clammy {
     private final Ui ui;
     private final Storage storage;
 
-    /** Creates Clammy with its console UI and local task storage. */
+    /**
+     * Creates Clammy with its console UI and local task storage.
+     */
     public Clammy() {
         this.ui = new Ui();
         this.storage = new Storage();
@@ -30,22 +33,23 @@ public class Clammy {
         new Clammy().run();
     }
 
-    /** Reads and executes commands until the user exits or input ends. */
+    /**
+     * Reads and executes commands until the user exits or input ends.
+     */
     public void run() {
         ui.showWelcome();
         TaskList tasks;
         try {
             tasks = storage.load();
         } catch (IOException exception) {
-            ui.showError("Could not load data/clammy.txt. " + exception.getMessage()
-                    + "\nExisting data was left unchanged. Fix the file or folder and restart Clammy.");
+            ui.showLoadingError(exception.getMessage());
             return;
         }
-        CommandHandler commandHandler = new CommandHandler(tasks, storage);
         while (ui.hasNextCommand()) {
             try {
-                boolean shouldExit = commandHandler.execute(ui.readCommand(), ui);
-                if (shouldExit) {
+                Command command = Parser.parse(ui.readCommand());
+                command.execute(tasks, ui, storage);
+                if (command.isExit()) {
                     return;
                 }
             } catch (ClammyException exception) {

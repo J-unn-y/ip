@@ -37,6 +37,14 @@ without access to project files through the working directory. All inputs, expec
 output, and saved-data checks below remain the same. Both modes require Java 25 and
 stop at the first failure.
 
+## Command extraction regression coverage
+
+Run the same cases after each extraction step. TC-01 through TC-07 check command
+dispatch and validation, and TC-08 through TC-33 check persistence and error
+recovery. TC-34 checks that the exit command stops processing queued input, and
+TC-35 checks that blank input remains recoverable when the parser creates commands
+directly. Console output and saved data must remain unchanged by the refactoring.
+
 ## Test case format
 
 ### TC-NN: Descriptive name
@@ -2133,3 +2141,75 @@ T	0	keep me
 ```
 
 **Data unchanged:** yes
+
+### TC-34: Exit ignores subsequent commands
+
+**Aim:** Verifies that the exit command ends the session before queued commands can change tasks or create a save file.
+
+**Input:**
+
+```text
+bye
+todo must not be added
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:** absent
+
+### TC-35: Empty commands remain recoverable
+
+**Aim:** Verifies that empty input display the unknown-command guide and allow the next valid command.
+
+**Input:**
+
+```text
+
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+I don't recognize that command. Valid commands are:
+todo DESCRIPTION
+deadline DESCRIPTION /by DATE_OR_TIME
+event DESCRIPTION /from START /to END
+list
+mark TASK_NUMBER
+unmark TASK_NUMBER
+delete TASK_NUMBER
+bye
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:** absent
