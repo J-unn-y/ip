@@ -75,7 +75,7 @@ displays them in their insertion order.
 
 ```text
 todo borrow book
-deadline return book /by Sunday
+deadline return book /by 2019-12-02
 event project meeting /from Mon 2pm /to 4pm
 list
 bye
@@ -97,7 +97,7 @@ ____________________________________________________________
 
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 02 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 
@@ -110,7 +110,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] borrow book
-2.[D][ ] return book (by: Sunday)
+2.[D][ ] return book (by: Dec 02 2019)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 
@@ -124,7 +124,7 @@ ____________________________________________________________
 
 ```text
 T	0	borrow book
-D	0	return book	Sunday
+D	0	return book	2019-12-02
 E	0	project meeting	Mon 2pm	4pm
 ```
 
@@ -298,7 +298,7 @@ ____________________________________________________________
 
 ```text
 todo read book
-deadline return book /by Sunday
+deadline return book /by 2019-12-02
 event project meeting /from Mon 2pm /to 4pm
 todo borrow book
 mark 3
@@ -329,7 +329,7 @@ ____________________________________________________________
 
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 02 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 
@@ -359,7 +359,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][ ] return book (by: Sunday)
+2.[D][ ] return book (by: Dec 02 2019)
 3.[T][ ] borrow book
 ____________________________________________________________
 
@@ -371,7 +371,7 @@ ____________________________________________________________
 
 ____________________________________________________________
 Here are the tasks in your list:
-1.[D][ ] return book (by: Sunday)
+1.[D][ ] return book (by: Dec 02 2019)
 2.[T][ ] borrow book
 ____________________________________________________________
 
@@ -383,12 +383,12 @@ ____________________________________________________________
 
 ____________________________________________________________
 Here are the tasks in your list:
-1.[D][ ] return book (by: Sunday)
+1.[D][ ] return book (by: Dec 02 2019)
 ____________________________________________________________
 
 ____________________________________________________________
 Noted. I've removed this task:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 02 2019)
 Now you have 0 tasks in the list.
 ____________________________________________________________
 
@@ -609,7 +609,7 @@ starts.
 
 ```text
 todo read book
-deadline return book /by Sunday
+deadline return book /by 2019-12-02
 event meeting /from Mon 2pm /to 4pm
 mark 1
 mark 2
@@ -633,7 +633,7 @@ ____________________________________________________________
 
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 02 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 
@@ -650,7 +650,7 @@ ____________________________________________________________
 
 ____________________________________________________________
 Nice! I've marked this task as done:
-[D][X] return book (by: Sunday)
+[D][X] return book (by: Dec 02 2019)
 ____________________________________________________________
 
 ____________________________________________________________
@@ -668,7 +668,7 @@ ____________________________________________________________
 
 ```text
 T	1	read book
-D	1	return book	Sunday
+D	1	return book	2019-12-02
 E	1	meeting	Mon 2pm	4pm
 ```
 
@@ -693,7 +693,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][X] return book (by: Sunday)
+2.[D][X] return book (by: Dec 02 2019)
 3.[E][X] meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 
@@ -704,7 +704,7 @@ ____________________________________________________________
 
 ____________________________________________________________
 OK, I've marked this task as not done yet:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 02 2019)
 ____________________________________________________________
 
 ____________________________________________________________
@@ -722,7 +722,7 @@ ____________________________________________________________
 
 ```text
 T	0	read book
-D	0	return book	Sunday
+D	0	return book	2019-12-02
 E	0	meeting	Mon 2pm	4pm
 ```
 
@@ -744,7 +744,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][ ] return book (by: Sunday)
+2.[D][ ] return book (by: Dec 02 2019)
 3.[E][ ] meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 
@@ -758,7 +758,7 @@ ____________________________________________________________
 
 ```text
 T	0	read book
-D	0	return book	Sunday
+D	0	return book	2019-12-02
 E	0	meeting	Mon 2pm	4pm
 ```
 
@@ -869,7 +869,7 @@ ____________________________________________________________
 ```json
 {
   "files": {
-    "data/clammy.txt": "﻿\r\n\r\nT\t1\tread book\r\n   \r\nD\t0\treturn book\tSunday"
+    "data/clammy.txt": "﻿\r\n\r\nT\t1\tread book\r\n   \r\nD\t0\treturn book\t2019-12-02"
   }
 }
 ```
@@ -892,7 +892,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][ ] return book (by: Sunday)
+2.[D][ ] return book (by: Dec 02 2019)
 ____________________________________________________________
 
 ____________________________________________________________
@@ -907,14 +907,14 @@ ____________________________________________________________
 
 ### TC-12: Round trip special characters and end of input
 
-**Aim:** Verifies pipes, Unicode, backslashes, and tabs in descriptions and dates, including exit at end of
-input.
+**Aim:** Verifies pipes, Unicode, backslashes, and tabs in descriptions and event fields, whitespace normalization in deadline times,
+and exit at end of input.
 
 **Input:**
 
 ```text
 todo C:\notes | café	计划
-deadline pay | bill /by Fri	noon
+deadline pay | bill /by 2019-12-02	1200
 event meet | team /from Mon	2pm /to 4	pm
 ```
 
@@ -934,7 +934,7 @@ ____________________________________________________________
 
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] pay | bill (by: Fri	noon)
+[D][ ] pay | bill (by: Dec 02 2019, 12:00 PM)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 
@@ -950,7 +950,7 @@ ____________________________________________________________
 
 ```text
 T	0	C:\\notes | café\t计划
-D	0	pay | bill	Fri\tnoon
+D	0	pay | bill	2019-12-02 1200
 E	0	meet | team	Mon\t2pm	4\tpm
 ```
 
@@ -972,7 +972,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] C:\notes | café	计划
-2.[D][ ] pay | bill (by: Fri	noon)
+2.[D][ ] pay | bill (by: Dec 02 2019, 12:00 PM)
 3.[E][ ] meet | team (from: Mon	2pm to: 4	pm)
 ____________________________________________________________
 
@@ -986,7 +986,7 @@ ____________________________________________________________
 
 ```text
 T	0	C:\\notes | café\t计划
-D	0	pay | bill	Fri\tnoon
+D	0	pay | bill	2019-12-02 1200
 E	0	meet | team	Mon\t2pm	4\tpm
 ```
 
@@ -1861,7 +1861,7 @@ ____________________________________________________________
 ```json
 {
   "files": {
-    "data/clammy.txt": "T\t0\tread book\nD\t1\treturn book\tSunday\nE\t0\tmeeting\tMon 2pm\t4pm\n"
+    "data/clammy.txt": "T\t0\tread book\nD\t1\treturn book\t2019-12-02\nE\t0\tmeeting\tMon 2pm\t4pm\n"
   }
 }
 ```
@@ -1884,7 +1884,7 @@ ____________________________________________________________
 
 ____________________________________________________________
 Noted. I've removed this task:
-[D][X] return book (by: Sunday)
+[D][X] return book (by: Dec 02 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 
@@ -2213,3 +2213,498 @@ ____________________________________________________________
 ```
 
 **Expected saved data:** absent
+
+### TC-36: Parse format and reload deadline dates and times
+
+**Aim:** Verifies ISO and day-first input, the requested 6pm example, valid leap days, explicit midnight, noon,
+23:59, whitespace normalization, formatted output, completion status, and persistence across restart.
+
+**Input:**
+
+```text
+deadline return book /by 2/12/2019 1800
+deadline report /by 2019-10-15
+deadline leap day /by 2020-02-29
+deadline midnight /by 2019-12-02 0000
+deadline noon /by 02/12/2019   1200
+deadline late /by 2019-12-31 2359
+deadline day first /by 2/1/2020
+deadline century leap /by 29/2/2000 0905
+mark 1
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+Now you have 1 task in the list.
+____________________________________________________________
+
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] report (by: Oct 15 2019)
+Now you have 2 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] leap day (by: Feb 29 2020)
+Now you have 3 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] midnight (by: Dec 02 2019, 12:00 AM)
+Now you have 4 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] noon (by: Dec 02 2019, 12:00 PM)
+Now you have 5 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] late (by: Dec 31 2019, 11:59 PM)
+Now you have 6 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] day first (by: Jan 02 2020)
+Now you have 7 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] century leap (by: Feb 29 2000, 9:05 AM)
+Now you have 8 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+Nice! I've marked this task as done:
+[D][X] return book (by: Dec 02 2019, 6:00 PM)
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][X] return book (by: Dec 02 2019, 6:00 PM)
+2.[D][ ] report (by: Oct 15 2019)
+3.[D][ ] leap day (by: Feb 29 2020)
+4.[D][ ] midnight (by: Dec 02 2019, 12:00 AM)
+5.[D][ ] noon (by: Dec 02 2019, 12:00 PM)
+6.[D][ ] late (by: Dec 31 2019, 11:59 PM)
+7.[D][ ] day first (by: Jan 02 2020)
+8.[D][ ] century leap (by: Feb 29 2000, 9:05 AM)
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+D	1	return book	2019-12-02 1800
+D	0	report	2019-10-15
+D	0	leap day	2020-02-29
+D	0	midnight	2019-12-02 0000
+D	0	noon	2019-12-02 1200
+D	0	late	2019-12-31 2359
+D	0	day first	2020-01-02
+D	0	century leap	2000-02-29 0905
+```
+
+**Input:**
+
+```text
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][X] return book (by: Dec 02 2019, 6:00 PM)
+2.[D][ ] report (by: Oct 15 2019)
+3.[D][ ] leap day (by: Feb 29 2020)
+4.[D][ ] midnight (by: Dec 02 2019, 12:00 AM)
+5.[D][ ] noon (by: Dec 02 2019, 12:00 PM)
+6.[D][ ] late (by: Dec 31 2019, 11:59 PM)
+7.[D][ ] day first (by: Jan 02 2020)
+8.[D][ ] century leap (by: Feb 29 2000, 9:05 AM)
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+D	1	return book	2019-12-02 1800
+D	0	report	2019-10-15
+D	0	leap day	2020-02-29
+D	0	midnight	2019-12-02 0000
+D	0	noon	2019-12-02 1200
+D	0	late	2019-12-31 2359
+D	0	day first	2020-01-02
+D	0	century leap	2000-02-29 0905
+```
+
+### TC-37: Invalid deadline dates and times are recoverable
+
+**Aim:** Verifies impossible calendar dates, non-leap years, invalid times, ambiguous text, wrong formats,
+and trailing junk are rejected without adding tasks or creating a save file.
+
+**Input:**
+
+```text
+deadline invalid /by 2019-02-29
+deadline invalid /by 31/4/2020 1800
+deadline invalid /by 29/2/1900
+deadline invalid /by 2020-13-01
+deadline invalid /by 2020-01-00
+deadline invalid /by 2019-12-02 2400
+deadline invalid /by 2019-12-02 1260
+deadline invalid /by 2019-12-02 180
+deadline invalid /by 2019-12-02 18:00
+deadline invalid /by Sunday
+deadline invalid /by 1800
+deadline invalid /by 2019-12-02 extra
+deadline invalid /by 12-02-2019
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:** absent
+
+### TC-38: Invalid dates preserve saved data
+
+**Aim:** Verifies a rejected deadline leaves existing saved bytes and the task list unchanged.
+
+**Setup:**
+
+```json
+{
+  "files": {
+    "data/clammy.txt": "\nD\t1\tkeep me\t2020-02-29\n\n"
+  }
+}
+```
+
+**Input:**
+
+```text
+deadline bad /by 2019-02-29
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Invalid deadline. Use yyyy-MM-dd or d/M/yyyy, optionally followed by HHmm (e.g., 2/12/2019 1800).
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][X] keep me (by: Feb 29 2020)
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+
+D	1	keep me	2020-02-29
+
+```
+
+**Data unchanged:** yes
+
+### TC-39: Reject impossible saved deadline
+
+**Aim:** Verifies invalid saved dates report the line number and preserve all original data.
+
+**Setup:**
+
+```json
+{
+  "files": {
+    "data/clammy.txt": "T\t0\tkeep me\nD\t0\tbad\t2019-02-29\n"
+  }
+}
+```
+
+**Input:**
+
+```text
+todo must not overwrite
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Could not load data/clammy.txt. Invalid saved task on line 2.
+Existing data was left unchanged. Fix the file or folder and restart Clammy.
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+T	0	keep me
+D	0	bad	2019-02-29
+```
+
+**Data unchanged:** yes
+
+### TC-40: Preserve legacy free-form deadline
+
+**Aim:** Verifies invalid saved dates report the line number and preserve all original data.
+
+**Setup:**
+
+```json
+{
+  "files": {
+    "data/clammy.txt": "T\t0\tkeep me\nD\t0\tbad\tSunday\n"
+  }
+}
+```
+
+**Input:**
+
+```text
+todo must not overwrite
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Could not load data/clammy.txt. Invalid saved task on line 2.
+Existing data was left unchanged. Fix the file or folder and restart Clammy.
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+T	0	keep me
+D	0	bad	Sunday
+```
+
+**Data unchanged:** yes
+
+### TC-41: Reject invalid saved deadline time
+
+**Aim:** Verifies invalid saved dates report the line number and preserve all original data.
+
+**Setup:**
+
+```json
+{
+  "files": {
+    "data/clammy.txt": "T\t0\tkeep me\nD\t0\tbad\t2019-12-02 2400\n"
+  }
+}
+```
+
+**Input:**
+
+```text
+todo must not overwrite
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Could not load data/clammy.txt. Invalid saved task on line 2.
+Existing data was left unchanged. Fix the file or folder and restart Clammy.
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+T	0	keep me
+D	0	bad	2019-12-02 2400
+```
+
+**Data unchanged:** yes
+
+### TC-42: Load and normalize a saved day-first deadline
+
+**Aim:** Verifies parseable old date text is loaded and normalized to ISO order on the next successful save.
+
+**Setup:**
+
+```json
+{
+  "files": {
+    "data/clammy.txt": "D\t0\treturn book\t2/12/2019 1800\n"
+  }
+}
+```
+
+**Input:**
+
+```text
+list
+mark 1
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+____________________________________________________________
+
+____________________________________________________________
+Nice! I've marked this task as done:
+[D][X] return book (by: Dec 02 2019, 6:00 PM)
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:**
+
+```text
+D	1	return book	2019-12-02 1800
+```

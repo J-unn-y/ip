@@ -99,7 +99,11 @@ public final class Parser {
         }
         String description = arguments.substring(0, byIndex).trim();
         String by = arguments.substring(byIndex + DEADLINE_SEPARATOR.length()).trim();
-        return new Deadline(description, by);
+        try {
+            return new Deadline(description, by);
+        } catch (IllegalArgumentException exception) {
+            throw new ParseException(exception.getMessage());
+        }
     }
 
     private static Event parseEvent(String arguments) throws ParseException {

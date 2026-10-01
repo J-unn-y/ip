@@ -18,7 +18,7 @@ public final class TaskCodec {
         List<String> fields = new ArrayList<>();
         if (task instanceof Deadline deadline) {
             fields.add("D");
-            fields.add(deadline.getBy());
+            fields.add(deadline.toStorageString());
         } else if (task instanceof Event event) {
             fields.add("E");
             fields.add(event.getFrom());

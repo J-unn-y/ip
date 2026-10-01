@@ -14,7 +14,7 @@ The file uses UTF-8 with one task per line. Fields are separated by actual tabs:
 
 ```text
 T	1	read book
-D	0	return book	Sunday
+D	0	return book	2019-12-02 1800
 E	0	project meeting	Mon 2pm	4pm
 ```
 
@@ -26,7 +26,16 @@ Other characters, including pipes and Unicode, are stored literally.
 
 Blank lines and an optional UTF-8 byte-order mark at the start are accepted.
 Unknown types, invalid statuses, wrong field counts, blank text fields, and
-invalid escape sequences are rejected. Dates remain plain text, as in Level 5.
+invalid escape sequences are rejected. Deadlines are parsed into `LocalDateTime`
+and saved as `yyyy-MM-dd` or `yyyy-MM-dd HHmm`, preserving an explicitly supplied
+time (including midnight). Day-first dates such as `2/12/2019 1800` can also be
+loaded and become the canonical year-first format on the next save. Event start/end
+fields remain plain text.
+
+Older free-form deadlines such as `Sunday` cannot be interpreted unambiguously.
+Clammy reports the affected line and leaves the file unchanged. Replace that date
+field with an explicit supported date before restarting. Impossible dates or times
+in saved deadlines are handled in the same way.
 
 ## File errors
 

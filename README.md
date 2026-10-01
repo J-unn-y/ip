@@ -111,8 +111,16 @@ deadline DESCRIPTION /by DATE_OR_TIME
 Example:
 
 ```text
-deadline return book /by Sunday
+deadline return book /by 2/12/2019 1800
 ```
+
+This displays `return book (by: Dec 02 2019, 6:00 PM)`. Deadlines accept `yyyy-MM-dd`
+or day-first `d/M/yyyy`, optionally followed by a 24-hour time in `HHmm` format.
+For example, `deadline submit report /by 2019-10-15` displays the date as `Oct 15 2019`.
+Impossible dates and times are rejected, including `2019-02-29` and `2400`.
+Date-only deadlines use midnight internally but display only the date; an explicit
+`0000` displays `12:00 AM`. Deadline values use Java's `LocalDateTime` without a time zone.
+Event start/end fields still accept free-form text.
 
 ### Add an event
 
