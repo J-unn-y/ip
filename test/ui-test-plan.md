@@ -3049,3 +3049,70 @@ ____________________________________________________________
 T	0	chores
 D	0	return book	2019-12-02
 ```
+
+### TC-47: Find preserves phrase order and internal spaces
+
+**Aim:** Verifies that a multiword search is a single case-insensitive literal phrase, not a set of
+independent keywords. Reversed words, extra spaces, and intervening words must not match the same
+query. Searching preserves the full task list and saved bytes.
+
+**Setup:**
+
+```json
+{
+  "files": {
+    "data/clammy.txt": "T\t0\treturn book\nT\t0\tbook return\nT\t0\treturn  book\nT\t0\treturn library book\n"
+  }
+}
+```
+
+**Input:**
+
+```text
+find RETURN BOOK
+find book return
+find return  book
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Hello! I'm Clammy.
+What can I do for you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] return book
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] book return
+____________________________________________________________
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] return  book
+____________________________________________________________
+
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] return book
+2.[T][ ] book return
+3.[T][ ] return  book
+4.[T][ ] return library book
+____________________________________________________________
+
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+
+```
+
+**Expected saved data:** unchanged
+
+**Data unchanged:** yes
