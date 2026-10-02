@@ -4,6 +4,10 @@ Clammy is a command-line task manager written in Java. It keeps track of todo it
 Tasks can be listed, marked as completed or incomplete, and deleted. Changes are saved automatically and
 loaded the next time Clammy starts.
 
+Read the [published user guide](https://j-unn-y.github.io/ip/) for setup instructions and command examples,
+or download the application from the [latest release](https://github.com/J-unn-y/ip/releases/latest).
+The [user guide source](docs/README.md) is also available in this repository.
+
 ## Requirements
 
 - JDK 25
@@ -180,6 +184,17 @@ Example:
 ```text
 unmark 1
 ```
+
+### Delete a task
+
+Use a task number from `list` to remove that task:
+
+```text
+delete TASK_NUMBER
+```
+
+For example, `delete 2` removes the second task in the full list. Deletion is saved automatically
+and cannot be undone. Run `list` again after deleting because later task numbers shift down.
 
 ### Exit Clammy
 
