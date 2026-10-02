@@ -21,6 +21,8 @@ public class FindCommand extends Command {
 
     /**
      * Displays matching tasks without changing the task list or saved data.
+     * Result numbers start at one and do not replace the full-list task numbers used by
+     * mark, unmark, and delete commands. Users should run list before changing a task.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {

@@ -64,6 +64,10 @@ public class TaskList {
 
     /**
      * Returns an unmodifiable view of tasks in insertion order.
+     * Changes made through this TaskList remain visible in the returned view.
+     * The tasks themselves are shared and can still have their completion status changed.
+     *
+     * @return Live list view that prevents callers from adding or removing tasks directly.
      */
     public List<Task> asList() {
         return Collections.unmodifiableList(tasks);
@@ -72,8 +76,11 @@ public class TaskList {
     /**
      * Returns a separate list of tasks whose descriptions contain the supplied text, ignoring case.
      * Matches retain insertion order and refer to the original tasks, including their completion status.
+     * Matching treats the keyword as one literal substring: word order and internal spaces matter,
+     * and dates and event times are not searched. The returned list captures membership at the time
+     * of the search; later additions or removals in this list do not update that membership.
      *
-     * @param keyword Nonblank substring to find in task descriptions.
+     * @param keyword Nonblank substring validated by the parser, with surrounding whitespace removed.
      * @return Matching tasks, or an empty list if no descriptions match.
      */
     public TaskList findTasks(String keyword) {
